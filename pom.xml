@@ -53,6 +53,13 @@
 		</developer>
 	</developers>
 
+	<scm>
+		<connection>scm:git:git://github.com/fiji/Auto_Threshold</connection>
+		<developerConnection>scm:git:git@github.com:fiji/Auto_Threshold</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/fiji/Auto_Threshold</url>
+	</scm>
+
 	<repositories>
 		<!-- NB: for project parent, in case of partial checkout -->
 		<repository>
