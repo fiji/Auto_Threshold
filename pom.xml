@@ -53,6 +53,11 @@
 		</developer>
 	</developers>
 
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://jenkins.imagej.net/job/Auto_Threshold/</url>
+	</ciManagement>
+
 	<scm>
 		<connection>scm:git:git://github.com/fiji/Auto_Threshold</connection>
 		<developerConnection>scm:git:git@github.com:fiji/Auto_Threshold</developerConnection>
