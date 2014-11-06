@@ -18,14 +18,6 @@
 	<name>plugins/Auto_Threshold.jar</name>
 	<description></description>
 
-	<dependencies>
-		<!-- ImageJ dependencies -->
-		<dependency>
-			<groupId>net.imagej</groupId>
-			<artifactId>ij</artifactId>
-		</dependency>
-	</dependencies>
-
 	<developers>
 		<developer>
 			<name>Gabriel Landini</name>
@@ -53,17 +45,16 @@
 		</developer>
 	</developers>
 
-	<ciManagement>
-		<system>Jenkins</system>
-		<url>http://jenkins.imagej.net/job/Auto_Threshold/</url>
-	</ciManagement>
-
 	<scm>
 		<connection>scm:git:git://github.com/fiji/Auto_Threshold</connection>
 		<developerConnection>scm:git:git@github.com:fiji/Auto_Threshold</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://github.com/fiji/Auto_Threshold</url>
 	</scm>
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://jenkins.imagej.net/job/Auto_Threshold/</url>
+	</ciManagement>
 
 	<repositories>
 		<!-- NB: for project parent -->
@@ -72,5 +63,13 @@
 			<url>http://maven.imagej.net/content/groups/public</url>
 		</repository>
 	</repositories>
+
+	<dependencies>
+		<!-- ImageJ dependencies -->
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>ij</artifactId>
+		</dependency>
+	</dependencies>
 
 </project>
