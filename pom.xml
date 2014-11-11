@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0   http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -13,10 +10,10 @@
 	</parent>
 
 	<artifactId>Auto_Threshold</artifactId>
-	<version>1.16-SNAPSHOT</version>
+	<version>1.15.1</version>
 
 	<name>plugins/Auto_Threshold.jar</name>
-	<description></description>
+	<description />
 
 	<developers>
 		<developer>
@@ -48,7 +45,7 @@
 	<scm>
 		<connection>scm:git:git://github.com/fiji/Auto_Threshold</connection>
 		<developerConnection>scm:git:git@github.com:fiji/Auto_Threshold</developerConnection>
-		<tag>HEAD</tag>
+		<tag>Auto_Threshold-1.15.1</tag>
 		<url>https://github.com/fiji/Auto_Threshold</url>
 	</scm>
 	<ciManagement>
