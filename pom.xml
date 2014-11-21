@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>Auto_Threshold</artifactId>
-	<version>1.16.0-SNAPSHOT</version>
+	<version>1.16.0</version>
 
 	<name>plugins/Auto_Threshold.jar</name>
 	<description />
@@ -45,7 +45,7 @@
 	<scm>
 		<connection>scm:git:git://github.com/fiji/Auto_Threshold</connection>
 		<developerConnection>scm:git:git@github.com:fiji/Auto_Threshold</developerConnection>
-		<tag>HEAD</tag>
+		<tag>Auto_Threshold-1.16.0</tag>
 		<url>https://github.com/fiji/Auto_Threshold</url>
 	</scm>
 	<ciManagement>
