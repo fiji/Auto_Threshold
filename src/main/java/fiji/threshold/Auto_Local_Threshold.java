@@ -633,6 +633,7 @@ public class Auto_Local_Threshold implements PlugIn {
 
 		Meanimp=duplicateImage(ip);
 		ContrastEnhancer ce = new ContrastEnhancer();
+		ce.setNormalize(true); // Needs to be true for correct normalization
 		ce.stretchHistogram(Meanimp, 0.0);
 		ImageConverter ic = new ImageConverter(Meanimp);
 		ic.convertToGray32();
