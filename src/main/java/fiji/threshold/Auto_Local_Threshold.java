@@ -1,6 +1,4 @@
 package fiji.threshold;
-import org.scijava.util.VersionUtils;
-
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -48,7 +46,8 @@ public class Auto_Local_Threshold implements PlugIn {
 		 // 2 - Ask for parameters:
 		GenericDialog gd = new GenericDialog("Auto Local Threshold");
 		String [] methods={"Try all", "Bernsen", "Contrast", "Mean", "Median", "MidGrey", "Niblack","Otsu", "Phansalkar", "Sauvola"};
-		final String version = VersionUtils.getVersion(getClass());
+		final Package p = getClass().getPackage();
+		final String version = p == null ? null : p.getImplementationVersion();
 		final String versionSuffix = version == null ? "" : " v" + version;
 		gd.addMessage("Auto Local Threshold" + versionSuffix);
 		gd.addChoice("Method", methods, methods[0]);
