@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>Auto_Threshold</artifactId>
-	<version>1.16.1-SNAPSHOT</version>
+	<version>1.16.2-SNAPSHOT</version>
 
 	<name>plugins/Auto_Threshold.jar</name>
 	<description />
