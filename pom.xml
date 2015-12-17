@@ -48,6 +48,10 @@
 		<tag>HEAD</tag>
 		<url>https://github.com/fiji/Auto_Threshold</url>
 	</scm>
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/fiji/Auto_Threshold/issues</url>
+	</issueManagement>
 	<ciManagement>
 		<system>Jenkins</system>
 		<url>http://jenkins.imagej.net/job/Auto_Threshold/</url>
