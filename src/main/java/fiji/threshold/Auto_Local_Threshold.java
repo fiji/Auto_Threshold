@@ -52,7 +52,7 @@ public class Auto_Local_Threshold implements PlugIn {
 		gd.addMessage("Auto Local Threshold" + versionSuffix);
 		gd.addChoice("Method", methods, methods[0]);
 		gd.addNumericField ("Radius",  15, 0);
-		gd.addMessage ("Special paramters (if different from default)");
+		gd.addMessage ("Special parameters (if different from default)");
 		gd.addNumericField ("Parameter_1",  0, 0);
 		gd.addNumericField ("Parameter_2",  0, 0);
 		gd.addCheckbox("White objects on black background",true);
