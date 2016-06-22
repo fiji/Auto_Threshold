@@ -26,6 +26,8 @@ import ij.process.ImageProcessor;
 // 1.3  1/Nov/2011 added constant offset to Niblack's method (request)
 // 1.4  2/Nov/2011 Niblack's new constant should be subtracted to match mean,mode and midgrey methods. Midgrey method had the wrong constant sign.
 // 1.5  18/Nov/2013 added 3 new local thresholding methdos: Constrast, Otsu and Phansalkar
+// 1.6  18/Feb/2016 Stefan Helfrich fixed a typo. 
+// 1.7  21/Jun/2016 Arttu Miettinen found that the the standard deviation in the Phansalkar method was not being computed properly
                 
 public class Auto_Local_Threshold implements PlugIn {
         /** Ask for parameters and then execute.*/
@@ -663,7 +665,7 @@ public class Auto_Local_Threshold implements PlugIn {
 		ipVar.multiply(1.0/255);
 
 		rf.rank(ipVar, radius, rf.VARIANCE); //Variance
-		ipVar.sqr(); //SD
+		ipVar.sqrt(); //SD
 
 		//Varimp.show();
 		byte[] pixels = (byte []) ip.getPixels();
