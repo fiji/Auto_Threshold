@@ -887,7 +887,7 @@ public class Auto_Threshold implements PlugIn {
 			iHisto[i]=(double) data[i];
 			if (data[i]>0) max =i;
 		}
-		double [] tHisto = iHisto;
+		double [] tHisto = new double[iHisto.length] ;
 
 		while (!bimodalTest(iHisto) ) {
 			 //smooth with a 3 point running mean filter
@@ -895,7 +895,7 @@ public class Auto_Threshold implements PlugIn {
 				tHisto[i]= (iHisto[i-1] + iHisto[i] +iHisto[i+1])/3;
 			tHisto[0] = (iHisto[0]+iHisto[1])/3; //0 outside
 			tHisto[data.length - 1] = (iHisto[data.length - 2]+iHisto[data.length - 1])/3; //0 outside
-			iHisto = tHisto;
+			System.arraycopy(tHisto, 0, iHisto, 0, iHisto.length) ;
 			iter++;
 			if (iter>10000) {
 				threshold = -1;
