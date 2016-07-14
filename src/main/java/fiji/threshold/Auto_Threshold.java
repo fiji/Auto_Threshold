@@ -31,7 +31,7 @@ import ij.process.StackConverter;
 // 1.13 2011/Apr/13 Revised the way 16bit thresholds are shown
 // 1.14 2011/Apr/14 IsoData issues a warning if threhsold not found
 // 1.15 2013/Feb/19 Added 'break' in the minimum method for cases where there is a constant histogram after the 2nd peaks
-
+// 1.16 2016/Jul/14 Fixed temporary array in Minimum method (thanks to FiReTiTi @ github)
 
 public class Auto_Threshold implements PlugIn {
         /** Ask for parameters and then execute.*/
