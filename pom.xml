@@ -14,33 +14,49 @@
 
 	<name>plugins/Auto_Threshold.jar</name>
 	<description />
+	<url>http://imagej.net/Auto_Threshold</url>
+	<inceptionYear>2009</inceptionYear>
 
 	<developers>
 		<developer>
+			<id>landinig</id>
 			<name>Gabriel Landini</name>
-			<email>g.landini@bham.ac.uk</email>
-			<url>http://www.dentistry.bham.ac.uk/landinig/software/software.html</url>
-			<organization>University of Birmingham</organization>
-			<organizationUrl>http://www.dentistry.bham.ac.uk/home/</organizationUrl>
+			<url>http://imagej.net/User:Landini</url>
 			<roles>
-				<role>architect</role>
-				<role>developer</role>
+				<role>founder</role>
+				<role>lead</role>
+				<role>debugger</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
 			</roles>
-			<timezone>+0</timezone>
 		</developer>
 		<developer>
-			<id>dscho</id>
-			<name>Johannes Schindelin</name>
-			<email>johannes.schindelin@gmx.de</email>
-			<url>http://loci.wisc.edu/people/johannes-schindelin</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<id>ctrueden</id>
+			<name>Curtis Rueden</name>
+			<url>http://imagej.net/User:Rueden</url>
 			<roles>
-				<role>developer</role>
+				<role>maintainer</role>
 			</roles>
-			<timezone>-6</timezone>
 		</developer>
 	</developers>
+	<contributors>
+		<contributor>
+			<name>Johannes Schindelin</name>
+			<url>http://imagej.net/User:Schindelin</url>
+			<properties><id>dscho</id></properties>
+		</contributor>
+		<contributor>
+			<name>Mark Hiner</name>
+			<url>http://imagej.net/User:Hinerm</url>
+			<properties><id>hinerm</id></properties>
+		</contributor>
+		<contributor>
+			<name>Stefan Helfrich</name>
+			<url>http://imagej.net/User:Stelfrich</url>
+			<properties><id>stelfrich</id></properties>
+		</contributor>
+	</contributors>
 
 	<scm>
 		<connection>scm:git:git://github.com/fiji/Auto_Threshold</connection>
