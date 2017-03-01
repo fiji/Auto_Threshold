@@ -88,8 +88,8 @@
 		<url>https://github.com/fiji/Auto_Threshold/issues</url>
 	</issueManagement>
 	<ciManagement>
-		<system>Jenkins</system>
-		<url>http://jenkins.imagej.net/job/Auto_Threshold/</url>
+		<system>Travis CI</system>
+		<url>https://travis-ci.org/fiji/Auto_Threshold</url>
 	</ciManagement>
 
 	<properties>
