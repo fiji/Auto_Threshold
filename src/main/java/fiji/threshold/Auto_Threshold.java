@@ -448,8 +448,10 @@ public class Auto_Threshold implements PlugIn {
 
 		// calculate the cumulative density and the weighted cumulative density
 		double[] S = new double[last + 1], W = new double[last + 1];
-		S[0] = data[0];
-		for (int i = Math.max(1, first); i <= last; i++) {
+		int istart = Math.max(1, first) - 1;
+		S[istart] = data[istart];
+		W[istart] = istart * data[istart];
+		for (int i = istart + 1; i <= last; i++) {
 			S[i] = S[i - 1] + data[i];
 			W[i] = W[i - 1] + i * data[i];
 		}
