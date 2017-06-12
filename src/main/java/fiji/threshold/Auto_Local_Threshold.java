@@ -1,21 +1,9 @@
 package fiji.threshold;
-import ij.IJ;
-import ij.ImagePlus;
-import ij.ImageStack;
-import ij.Undo;
-import ij.gui.GenericDialog;
-import ij.gui.NewImage;
-import ij.gui.OvalRoi;
-import ij.gui.Roi;
-import ij.gui.YesNoCancelDialog;
-import ij.plugin.CanvasResizer;
-import ij.plugin.ContrastEnhancer;
-import ij.plugin.MontageMaker;
-import ij.plugin.PlugIn;
-import ij.plugin.filter.RankFilters;
-import ij.process.Blitter;
-import ij.process.ImageConverter;
-import ij.process.ImageProcessor;
+import ij.*;
+import ij.process.*;
+import ij.gui.*;
+import ij.plugin.filter.*;
+import ij.plugin.*;
 
 // AutoLocalThreshold segmentation 
 // Following the guidelines at http://pacific.mpi-cbg.de/wiki/index.php/PlugIn_Design_Guidelines
@@ -26,8 +14,12 @@ import ij.process.ImageProcessor;
 // 1.3  1/Nov/2011 added constant offset to Niblack's method (request)
 // 1.4  2/Nov/2011 Niblack's new constant should be subtracted to match mean,mode and midgrey methods. Midgrey method had the wrong constant sign.
 // 1.5  18/Nov/2013 added 3 new local thresholding methdos: Constrast, Otsu and Phansalkar
+// 1.6  16/Set/2015 Stefan Helfrich fixed normalisation for the histogram in the Phansalkar method. 
 // 1.6  18/Feb/2016 Stefan Helfrich fixed a typo. 
 // 1.7  21/Jun/2016 Arttu Miettinen found that the the standard deviation in the Phansalkar method was not being computed properly
+// 1.8  10/Jun/2017 Changed Otsu algorithm to use E. Clebi's code (old code had a potential issue in some 16bit images, and while 16 bit images are not used here, we want to use same algorithm as Auto_Threshold plugin).
+
+
                 
 public class Auto_Local_Threshold implements PlugIn {
         /** Ask for parameters and then execute.*/
@@ -48,10 +40,7 @@ public class Auto_Local_Threshold implements PlugIn {
 		 // 2 - Ask for parameters:
 		GenericDialog gd = new GenericDialog("Auto Local Threshold");
 		String [] methods={"Try all", "Bernsen", "Contrast", "Mean", "Median", "MidGrey", "Niblack","Otsu", "Phansalkar", "Sauvola"};
-		final Package p = getClass().getPackage();
-		final String version = p == null ? null : p.getImplementationVersion();
-		final String versionSuffix = version == null ? "" : " v" + version;
-		gd.addMessage("Auto Local Threshold" + versionSuffix);
+		gd.addMessage("Auto Local Threshold v1.8");
 		gd.addChoice("Method", methods, methods[0]);
 		gd.addNumericField ("Radius",  15, 0);
 		gd.addMessage ("Special parameters (if different from default)");
@@ -509,8 +498,9 @@ public class Auto_Local_Threshold implements PlugIn {
 
 	void Otsu(ImagePlus imp, int radius,  double par1, double par2, boolean doIwhite) {
 		// Otsu's threshold algorithm
-		// C++ code by Jordan Bevik <Jordan.Bevic@qtiworld.com>
-		// ported to ImageJ plugin by G.Landini. Same algorithm as in Auto_Threshold, this time on local circular regions
+		// M. Emre Celebi 6.15.2007, Fourier Library https://sourceforge.net/projects/fourier-ipal/
+		// ported to ImageJ plugin by G.Landini. Same algorithm as in Auto_Threshold, this time for local circular regions
+
 		int[] data;
 		int w=imp.getWidth();
 		int h=imp.getHeight();
@@ -531,13 +521,16 @@ public class Auto_Local_Threshold implements PlugIn {
 			backg =  (byte) 0xff;
 		}
 
-		int k,kStar;  // k = the current threshold; kStar = optimal threshold
-		int N1, N;    // N1 = # points with intensity <=k; N = total number of points
-		double BCV, BCVmax; // The current Between Class Variance and maximum BCV
-		double num, denom;  // temporary bookeeping
-		int Sk;  // The total intensity for all histogram points <=k
-		int S, L=256; // The total intensity of the image. Need to hange here if modifying for >8 bits images
-		int roiy;
+		int ih, roiy, L=256; //L is for 8bit images.
+		int threshold;
+		int num_pixels;
+		double total_mean;	/* mean gray-level for the whole image */
+		double bcv, term;	/* between-class variance, scaling term */
+		double max_bcv;		/* max BCV */
+		double [] cnh = new  double [L];	/* cumulative normalized histogram */
+		double [] mean = new  double [L];	/* mean gray-level */
+		double [] histo = new  double [L];	/* normalized histogram */
+
 
 		Roi roi = new OvalRoi(0, 0, radiusx2, radiusx2);
 		//ip.setRoi(roi);
@@ -551,46 +544,48 @@ public class Auto_Local_Threshold implements PlugIn {
 				position=x+y*w;
 				data = ip.getHistogram();
 
-				// Initialize values:
-				S = N = 0;
-				for (k=0; k<L; k++){
-					S += k * data[k];	// Total histogram intensity
-					N += data[k];		// Total number of data points
+				//----
+				/* Calculate total numbre of pixels */
+				num_pixels=0;
+				
+				for ( ih = 0; ih < L; ih++ )
+					num_pixels=num_pixels+data[ih];
+	
+				term = 1.0 / ( double ) num_pixels;
+
+				/* Calculate the normalized histogram */
+				for ( ih = 0; ih < L; ih++ ) {
+					histo[ih] = term * data[ih];
 				}
 
-				Sk = 0;
-				N1 = data[0]; // The entry for zero intensity
-				BCV = 0;
-				BCVmax=0;
-				kStar = 0;
+				/* Calculate the cumulative normalized histogram */
+				cnh[0] = histo[0];
+				for ( ih = 1; ih < L; ih++ ) {
+					cnh[ih] = cnh[ih - 1] + histo[ih];
+				}
 
-				// Look at each possible threshold value,
-				// calculate the between-class variance, and decide if it's a max
-				for (k=1; k<L-1; k++) { // No need to check endpoints k = 0 or k = L-1
-					Sk += k * data[k];
-					N1 += data[k];
+				mean[0] = 0.0;
 
-					// The float casting here is to avoid compiler warning about loss of precision and
-					// will prevent overflow in the case of large saturated images
-					denom = (double)( N1) * (N - N1); // Maximum value of denom is (N^2)/4 =  approx. 3E10
+				for ( ih = 0 + 1; ih < L; ih++ ) {
+					mean[ih] = mean[ih - 1] + ih * histo[ih];
+				}
 
-					if (denom != 0 ){
-						// Float here is to avoid loss of precision when dividing
-						num = ( (double)N1 / N ) * S - Sk; 	// Maximum value of num =  255*N = approx 8E7
-						BCV = (num * num) / denom;
-					}
-					else
-						BCV = 0;
+				total_mean = mean[L-1];
 
-					if (BCV >= BCVmax){ // Assign the best threshold found so far
-						BCVmax = BCV;
-						kStar = k;
+				//	Calculate the BCV at each gray-level and find the threshold that maximizes it 
+				threshold = Integer.MIN_VALUE;
+				max_bcv = 0.0;
+
+				for ( ih = 0; ih < L; ih++ ) {
+					bcv = total_mean * cnh[ih] - mean[ih];
+					bcv *= bcv / ( cnh[ih] * ( 1.0 - cnh[ih] ) );
+
+					if ( max_bcv < bcv ) {
+						max_bcv = bcv;
+						threshold = ih;
 					}
 				}
-				// kStar += 1;	// Use QTI convention that intensity -> 1 if intensity >= k
-				// (the algorithm was developed for I-> 1 if I <= k.)
-				//return kStar;
-				pixelsOut[position] = ((int) (pixels[position]&0xff)>kStar) ? object : backg;
+				pixelsOut[position] = ((int) (pixels[position]& 0xff)>threshold) ? object : backg;
 			}
 		}
 		for (position=0; position<w*h; position++) pixels[position]=pixelsOut[position]; //update with thresholded pixels
