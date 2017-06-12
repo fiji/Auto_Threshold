@@ -1,8 +1,22 @@
 package fiji.threshold;
-import ij.*;
-import ij.process.*;
-import ij.gui.*;
-import ij.plugin.*;
+import ij.IJ;
+import ij.ImagePlus;
+import ij.ImageStack;
+import ij.Undo;
+import ij.gui.GenericDialog;
+import ij.gui.NewImage;
+import ij.gui.OvalRoi;
+import ij.gui.Roi;
+import ij.gui.YesNoCancelDialog;
+import ij.plugin.CanvasResizer;
+import ij.plugin.ContrastEnhancer;
+import ij.plugin.MontageMaker;
+import ij.plugin.PlugIn;
+import ij.plugin.filter.RankFilters;
+import ij.process.Blitter;
+import ij.process.ImageConverter;
+import ij.process.ImageProcessor;
+import ij.process.StackConverter;
 
 // Autothreshold segmentation 
 // Following the guidelines at http://fiji.sc/wiki/index.php/PlugIn_Design_Guidelines
