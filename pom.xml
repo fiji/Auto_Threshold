@@ -51,6 +51,14 @@
 				<role>maintainer</role>
 			</roles>
 		</developer>
+		<developer>
+			<id>stelfrich</id>
+			<name>Stefan Helfrich</name>
+			<url>http://imagej.net/User:Stelfrich</url>
+			<roles>
+				<role>maintainer</role>
+			</roles>
+		</developer>
 	</developers>
 	<contributors>
 		<contributor>
