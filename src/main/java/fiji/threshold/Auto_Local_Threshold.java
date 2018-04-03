@@ -30,6 +30,7 @@ import ij.process.ImageProcessor;
 // 1.6  18/Feb/2016 Stefan Helfrich fixed a typo. 
 // 1.7  21/Jun/2016 Arttu Miettinen found that the the standard deviation in the Phansalkar method was not being computed properly
 // 1.8  10/Jun/2017 Changed Otsu algorithm to use E. Clebi's code (old code had a potential issue in some 16bit images, and while 16 bit images are not used here, we want to use same algorithm as Auto_Threshold plugin).
+// 1.9  3/Apr/2018  Fixed Otsu method: do not return background as thresholded when image is all 0. Reported by Clyde Pinto.
 
 
                 
@@ -52,7 +53,7 @@ public class Auto_Local_Threshold implements PlugIn {
 		 // 2 - Ask for parameters:
 		GenericDialog gd = new GenericDialog("Auto Local Threshold");
 		String [] methods={"Try all", "Bernsen", "Contrast", "Mean", "Median", "MidGrey", "Niblack","Otsu", "Phansalkar", "Sauvola"};
-		gd.addMessage("Auto Local Threshold v1.8");
+		gd.addMessage("Auto Local Threshold v1.9");
 		gd.addChoice("Method", methods, methods[0]);
 		gd.addNumericField ("Radius",  15, 0);
 		gd.addMessage ("Special parameters (if different from default)");
@@ -585,7 +586,7 @@ public class Auto_Local_Threshold implements PlugIn {
 				total_mean = mean[L-1];
 
 				//	Calculate the BCV at each gray-level and find the threshold that maximizes it 
-				threshold = Integer.MIN_VALUE;
+				threshold = 0; //Integer.MIN_VALUE;
 				max_bcv = 0.0;
 
 				for ( ih = 0; ih < L; ih++ ) {
@@ -597,7 +598,7 @@ public class Auto_Local_Threshold implements PlugIn {
 						threshold = ih;
 					}
 				}
-				pixelsOut[position] = ((int) (pixels[position]& 0xff)>threshold) ? object : backg;
+				pixelsOut[position] = ((int) (pixels[position]& 0xff)>threshold || (int) (pixels[position]& 0xff)==255) ? object : backg;
 			}
 		}
 		for (position=0; position<w*h; position++) pixels[position]=pixelsOut[position]; //update with thresholded pixels
