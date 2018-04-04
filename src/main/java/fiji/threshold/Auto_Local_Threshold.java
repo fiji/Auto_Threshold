@@ -29,9 +29,9 @@ import ij.process.ImageProcessor;
 // 1.6  16/Set/2015 Stefan Helfrich fixed normalisation for the histogram in the Phansalkar method. 
 // 1.6  18/Feb/2016 Stefan Helfrich fixed a typo. 
 // 1.7  21/Jun/2016 Arttu Miettinen found that the the standard deviation in the Phansalkar method was not being computed properly
-// 1.8  10/Jun/2017 Changed Otsu algorithm to use E. Clebi's code (old code had a potential issue in some 16bit images, and while 16 bit images are not used here, we want to use same algorithm as Auto_Threshold plugin).
+// 1.8  10/Jun/2017 Changed Otsu algorithm to use E. Celebi's code (old code had a potential issue in some 16bit images, and while 16 bit images are not used here, we want to use same algorithm as Auto_Threshold plugin).
 // 1.9  3/Apr/2018  Fixed Otsu method: do not return background as thresholded when image is all 0. Reported by Clyde Pinto.
-
+// 1.10 4/Apr/2018  Contrast method should not return background as thresholded when the pixel is 0 and there is no definite direction to toggle to.
 
                 
 public class Auto_Local_Threshold implements PlugIn {
@@ -53,7 +53,7 @@ public class Auto_Local_Threshold implements PlugIn {
 		 // 2 - Ask for parameters:
 		GenericDialog gd = new GenericDialog("Auto Local Threshold");
 		String [] methods={"Try all", "Bernsen", "Contrast", "Mean", "Median", "MidGrey", "Niblack","Otsu", "Phansalkar", "Sauvola"};
-		gd.addMessage("Auto Local Threshold v1.9");
+		gd.addMessage("Auto Local Threshold v1.10");
 		gd.addChoice("Method", methods, methods[0]);
 		gd.addNumericField ("Radius",  15, 0);
 		gd.addMessage ("Special parameters (if different from default)");
@@ -234,7 +234,7 @@ public class Auto_Local_Threshold implements PlugIn {
 		//  2) Sezgin M. and Sankur B. (2004) "Survey over Image Thresholding 
 		//   Techniques and Quantitative Performance Evaluation" Journal of 
 		//   Electronic Imaging, 13(1): 146-165 
-		//  http://citeseer.ist.psu.edu/sezgin04survey.html
+		//   http://citeseer.ist.psu.edu/sezgin04survey.html
 		// Ported to ImageJ plugin from E Celebi's fourier_0.8 routines
 		// This version uses a circular local window, instead of a rectagular one
 		ImagePlus Maximp, Minimp;
@@ -288,7 +288,7 @@ public class Auto_Local_Threshold implements PlugIn {
 
 	void Contrast(ImagePlus imp, int radius,  double par1, double par2, boolean doIwhite) {
 		// G. Landini, 2013
-		// Based on a simple contrast toggle. This procedure does not have user-provided paramters other than the kernel radius
+		// Based on a simple contrast toggle. This procedure does not have user-provided parameters other than the kernel radius
 		// Sets the pixel value to either white or black depending on whether its current value is closest to the local Max or Min respectively
 		// The procedure is similar to Toggle Contrast Enhancement (see Soille, Morphological Image Analysis (2004), p. 259
 
@@ -322,7 +322,7 @@ public class Auto_Local_Threshold implements PlugIn {
 		byte[] max = (byte [])ipMax.getPixels();
 		byte[] min = (byte [])ipMin.getPixels();
 		for (int i=0; i<pixels.length; i++) {
-			pixels[i] = ((Math.abs((int)(max[i]&0xff- pixels[i]&0xff)) <= Math.abs((int)(pixels[i]&0xff- min[i]&0xff)))) ? object : backg;
+			pixels[i] = ((Math.abs((int)(max[i]&0xff- pixels[i]&0xff)) <= Math.abs((int)(pixels[i]&0xff- min[i]&0xff))) && ((int)(pixels[i]&0xff) != 0)) ? object :  backg;
 		}    
 		//imp.updateAndDraw();
 		return;
@@ -452,7 +452,7 @@ public class Auto_Local_Threshold implements PlugIn {
 	void Niblack(ImagePlus imp, int radius,  double par1, double par2, boolean doIwhite  ) {
 		// Niblack recommends K_VALUE = -0.2 for images with black foreground 
 		// objects, and K_VALUE = +0.2 for images with white foreground objects.
-		//  Niblack W. (1986) "An introduction to Digital Image Processing" Prentice-Hall.
+		// Niblack W. (1986) "An introduction to Digital Image Processing" Prentice-Hall.
 		// Ported to ImageJ plugin from E Celebi's fourier_0.8 routines
 		// This version uses a circular local window, instead of a rectagular one
 
