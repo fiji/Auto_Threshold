@@ -18,6 +18,8 @@ import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 import ij.process.StackConverter;
 
+import org.scijava.util.VersionUtils;
+
 // Autothreshold segmentation 
 // Following the guidelines at http://fiji.sc/wiki/index.php/PlugIn_Design_Guidelines
 // ImageJ plugin by G. Landini at bham. ac. uk
@@ -63,7 +65,8 @@ public class Auto_Threshold implements PlugIn {
 
 		 // 2 - Ask for parameters:
 		GenericDialog gd = new GenericDialog("Auto Threshold");
-		gd.addMessage("Auto Threshold v1.17");
+		String version = VersionUtils.getVersion(getClass());
+		gd.addMessage("Auto Threshold v" + version);
 		String [] methods={"Try all", "Default", "Huang", "Huang2", "Intermodes", "IsoData",  "Li", "MaxEntropy","Mean", "MinError(I)", "Minimum", "Moments", "Otsu", "Percentile", "RenyiEntropy", "Shanbhag" , "Triangle", "Yen"};
 		gd.addChoice("Method", methods, methods[0]);
 		String[] labels = new String[2];
