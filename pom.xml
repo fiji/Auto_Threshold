@@ -11,7 +11,7 @@
 
 	<groupId>sc.fiji</groupId>
 	<artifactId>Auto_Threshold</artifactId>
-	<version>1.17.1-SNAPSHOT</version>
+	<version>1.17.1</version>
 
 	<name>Auto Threshold</name>
 	<description>Auto Threshold plugin for Fiji.</description>
@@ -83,7 +83,7 @@
 	<scm>
 		<connection>scm:git:git://github.com/fiji/Auto_Threshold</connection>
 		<developerConnection>scm:git:git@github.com:fiji/Auto_Threshold</developerConnection>
-		<tag>HEAD</tag>
+		<tag>Auto_Threshold-1.17.1</tag>
 		<url>https://github.com/fiji/Auto_Threshold</url>
 	</scm>
 	<issueManagement>
