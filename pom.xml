@@ -15,7 +15,7 @@
 
 	<name>Auto Threshold</name>
 	<description>Auto Threshold plugin for Fiji.</description>
-	<url>http://imagej.net/Auto_Threshold</url>
+	<url>https://imagej.net/Auto_Threshold</url>
 	<inceptionYear>2009</inceptionYear>
 	<organization>
 		<name>Fiji</name>
@@ -33,7 +33,7 @@
 		<developer>
 			<id>landinig</id>
 			<name>Gabriel Landini</name>
-			<url>http://imagej.net/User:Landini</url>
+			<url>https://imagej.net/User:Landini</url>
 			<roles>
 				<role>founder</role>
 				<role>lead</role>
@@ -46,7 +46,7 @@
 		<developer>
 			<id>ctrueden</id>
 			<name>Curtis Rueden</name>
-			<url>http://imagej.net/User:Rueden</url>
+			<url>https://imagej.net/User:Rueden</url>
 			<roles>
 				<role>maintainer</role>
 			</roles>
@@ -54,7 +54,7 @@
 		<developer>
 			<id>stelfrich</id>
 			<name>Stefan Helfrich</name>
-			<url>http://imagej.net/User:Stelfrich</url>
+			<url>https://imagej.net/User:Stelfrich</url>
 			<roles>
 				<role>maintainer</role>
 			</roles>
@@ -63,12 +63,12 @@
 	<contributors>
 		<contributor>
 			<name>Johannes Schindelin</name>
-			<url>http://imagej.net/User:Schindelin</url>
+			<url>https://imagej.net/User:Schindelin</url>
 			<properties><id>dscho</id></properties>
 		</contributor>
 		<contributor>
 			<name>Mark Hiner</name>
-			<url>http://imagej.net/User:Hinerm</url>
+			<url>https://imagej.net/User:Hinerm</url>
 			<properties><id>hinerm</id></properties>
 		</contributor>
 	</contributors>
@@ -108,7 +108,7 @@
 	<repositories>
 		<repository>
 			<id>imagej.public</id>
-			<url>http://maven.imagej.net/content/groups/public</url>
+			<url>https://maven.imagej.net/content/groups/public</url>
 		</repository>
 	</repositories>
 
