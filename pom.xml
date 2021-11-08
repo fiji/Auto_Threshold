@@ -81,7 +81,7 @@
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/fiji/Auto_Threshold</connection>
+		<connection>scm:git:https://github.com/fiji/Auto_Threshold</connection>
 		<developerConnection>scm:git:git@github.com:fiji/Auto_Threshold</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://github.com/fiji/Auto_Threshold</url>
