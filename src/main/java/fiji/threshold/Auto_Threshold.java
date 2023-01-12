@@ -45,6 +45,7 @@ import org.scijava.util.VersionUtils;
 //                  Renamed Johannes Schindelin's very fast version of Huang method as Huang2 (it does not return the same values as the original) 
 //                  Replaced Otsu's method with Emre Celebi's code (Fourier library) because previous code could cause an overflow in some 16bit images
 //                  Fixed a 16 bit overflow in the Mean method computation
+// 1.18 2023/Jan/12 Added bilevel image threshold. Thanks to Wayne Rasband and Wilhelm Burger.
 
 public class Auto_Threshold implements PlugIn {
         /** Ask for parameters and then execute.*/
@@ -57,7 +58,6 @@ public class Auto_Threshold implements PlugIn {
 			return;
 		}
 
-		//if (imp.getBitDepth()!=8) {//		
 		if (imp.getBitDepth()!=8 && imp.getBitDepth()!=16) {
 			IJ.showMessage("Error", "Only 8 and 16-bit images are currently supported.");
 			return;
@@ -175,7 +175,7 @@ public class Auto_Threshold implements PlugIn {
 							imp3 = new ImagePlus("Auto Threshold", stackNew);
 							imp3.updateAndDraw();
 							MontageMaker mm= new MontageMaker();
-							mm.makeMontage( imp3, 4, 4, 1.0, 1, (ml-1), 1, 0, true); // 4 columns and 4 rows
+							mm.makeMontage( imp3, 5, 4, 1.0, 1, (ml-1), 1, 0, true); // 4 columns and 4 rows
 						}
 					}
 				}
@@ -284,82 +284,87 @@ public class Auto_Threshold implements PlugIn {
 			}
 			imp.setSliceWithoutUpdate(currentSlice);
 		}
+		 
+		//check for bilevel image
+		threshold = bilevel(data);
+		if (threshold<0){
+			//not a bilevel image
+		 
+			if (noBlack) data[0]=0;
+			if (noWhite) data[data.length - 1]=0;
 
-		if (noBlack) data[0]=0;
-		if (noWhite) data[data.length - 1]=0;
+			// bracket the histogram to the range that holds data to make it quicker
+			int minbin=-1, maxbin=-1;
+			for (int i=0; i<data.length; i++){
+				if (data[i]>0) maxbin = i;
+			}
+			for (int i=data.length-1; i>=0; i--){
+				if (data[i]>0) minbin = i;
+			}
+			//IJ.log (""+minbin+" "+maxbin);
+			int [] data2 = new int [(maxbin-minbin)+1];
+			for (int i=minbin; i<=maxbin; i++){
+				data2[i-minbin]= data[i];;
+			}
 
-		// bracket the histogram to the range that holds data to make it quicker
-		int minbin=-1, maxbin=-1;
-		for (int i=0; i<data.length; i++){
-			if (data[i]>0) maxbin = i;
-		}
-		for (int i=data.length-1; i>=0; i--){
-			if (data[i]>0) minbin = i;
-		}
-		//IJ.log (""+minbin+" "+maxbin);
-		int [] data2 = new int [(maxbin-minbin)+1];
-		for (int i=minbin; i<=maxbin; i++){
-			data2[i-minbin]= data[i];;
-		}
+			// Apply the selected algorithm
+			if (data2.length < 2){
+				threshold = 0;
+			}
+			else if(myMethod.equals("Default")){
+				threshold = IJDefault(data2); // re-implemeted so we can ignore black/white and set the bright or dark objects
+			}
+			else if(myMethod.equals("Huang")){
+				threshold =  Huang(data2);
+			}
+			else if(myMethod.equals("Huang2")){
+				threshold =  Huang2(data2);
+			}
+			else if(myMethod.equals("Intermodes")){
+				threshold = Intermodes(data2);
+			}
+			else if(myMethod.equals("IsoData")){
+				threshold = IsoData (data2);
+			}
+			else if(myMethod.equals("Li")){
+				threshold = Li(data2);
+			}
+			else if(myMethod.equals("MaxEntropy")){
+				threshold = MaxEntropy(data2);
+			}
+			else if(myMethod.equals("Mean")){
+				threshold = Mean(data2);
+			}
+			else if(myMethod.equals("MinError(I)")){
+				threshold = MinErrorI(data2);
+			}
+			else if(myMethod.equals("Minimum")){
+				threshold = Minimum(data2);
+			}
+			else if(myMethod.equals("Moments")){
+				threshold = Moments(data2);
+			}
+			else if(myMethod.equals("Otsu")){
+				threshold = Otsu(data2);
+			}
+			else if(myMethod.equals("Percentile")){
+				threshold = Percentile(data2);
+			}
+			else if(myMethod.equals("RenyiEntropy")){
+				threshold = RenyiEntropy(data2);
+			}
+			else if(myMethod.equals("Shanbhag")){
+				threshold = Shanbhag(data2);
+			}
+			else if(myMethod.equals("Triangle")){
+				threshold = Triangle(data2); 
+			}
+			else if(myMethod.equals("Yen")){
+				threshold = Yen(data2);
+			}
 
-		// Apply the selected algorithm
-		if (data2.length < 2){
-			threshold = 0;
+			threshold+=minbin; // add the offset of the histogram
 		}
-		else if(myMethod.equals("Default")){
-			threshold = IJDefault(data2); // re-implemeted so we can ignore black/white and set the bright or dark objects
-		}
-		else if(myMethod.equals("Huang")){
-			threshold =  Huang(data2);
-		}
-		else if(myMethod.equals("Huang2")){
-			threshold =  Huang2(data2);
-		}
-		else if(myMethod.equals("Intermodes")){
-			threshold = Intermodes(data2);
-		}
-		else if(myMethod.equals("IsoData")){
-			threshold = IsoData (data2);
-		}
-		else if(myMethod.equals("Li")){
-			threshold = Li(data2);
-		}
-		else if(myMethod.equals("MaxEntropy")){
-			threshold = MaxEntropy(data2);
-		}
-		else if(myMethod.equals("Mean")){
-			threshold = Mean(data2);
-		}
-		else if(myMethod.equals("MinError(I)")){
-			threshold = MinErrorI(data2);
-		}
-		else if(myMethod.equals("Minimum")){
-			threshold = Minimum(data2);
-		}
-		else if(myMethod.equals("Moments")){
-			threshold = Moments(data2);
-		}
-		else if(myMethod.equals("Otsu")){
-			threshold = Otsu(data2);
-		}
-		else if(myMethod.equals("Percentile")){
-			threshold = Percentile(data2);
-		}
-		else if(myMethod.equals("RenyiEntropy")){
-			threshold = RenyiEntropy(data2);
-		}
-		else if(myMethod.equals("Shanbhag")){
-			threshold = Shanbhag(data2);
-		}
-		else if(myMethod.equals("Triangle")){
-			threshold = Triangle(data2); 
-		}
-		else if(myMethod.equals("Yen")){
-			threshold = Yen(data2);
-		}
-
-		threshold+=minbin; // add the offset of the histogram
-
 		// show treshold in log window if required
 		if (doIlog) IJ.log(myMethod+": "+threshold);
 		if (threshold>-1) { 
@@ -405,7 +410,31 @@ public class Auto_Threshold implements PlugIn {
 		// 2 - Return the threshold and the image
 		return new Object[] {threshold, imp};
 	}
-
+	
+	public static int bilevel(int[] data) {
+		int maxValue = data.length;
+		int firstNonZero=-1, secondNonZero=-1;
+		int nonZero = 0;
+		
+		for (int i=0; i<maxValue; i++) {
+			int count = data[i];
+			if (count>0) {
+				nonZero++;
+				if (nonZero>2) return -1;
+				if (firstNonZero==-1)
+					firstNonZero = i;
+				else
+					secondNonZero = i;
+			}
+		}
+		//IJ.log("bilevel: "+nonZero+" "+firstNonZero+" "+secondNonZero);
+		if (nonZero==2)
+			return secondNonZero-1;
+		else
+			return -1;
+	}
+	
+	
 	public static int IJDefault(int [] data ) {
 		// Original IJ implementation for compatibility.
 		int level;
