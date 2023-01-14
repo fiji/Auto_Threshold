@@ -118,6 +118,7 @@
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
 		</dependency>
+
 		<!-- SciJava dependencies -->
 		<dependency>
 			<groupId>org.scijava</groupId>
