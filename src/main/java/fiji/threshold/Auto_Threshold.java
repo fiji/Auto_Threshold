@@ -196,7 +196,7 @@ public class Auto_Threshold implements PlugIn {
 							imp3 = new ImagePlus("Auto Threshold", stackNew);
 							imp3.updateAndDraw();
 							MontageMaker mm= new MontageMaker();
-							mm.makeMontage( imp3, 5, 4, 1.0, 1, (ml-1), 1, 0, true); // 4 columns and 4 rows
+							mm.makeMontage( imp3, 5, 4, 1.0, 1, (ml-1), 1, 0, true); // 5 columns and 4 rows
 						}
 					}
 				}
@@ -223,7 +223,7 @@ public class Auto_Threshold implements PlugIn {
 				imp3 = new ImagePlus("Auto Threshold", stackNew);
 				imp3.updateAndDraw();
 				MontageMaker mm= new MontageMaker();
-				mm.makeMontage( imp3, 5, 4, 1.0, 1, (ml-1), 1, 0, true); // 4 columns and 4 rows
+				mm.makeMontage( imp3, 5, 4, 1.0, 1, (ml-1), 1, 0, true); // 5 columns and 4 rows
 				return;
 			}
 		}
